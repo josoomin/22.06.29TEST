@@ -163,10 +163,14 @@ namespace MyCat
                 _gameMgr.AddHeart(1);
                 Destroy(collision.gameObject);
             }
-            else if (collision.gameObject.name == "Coin")
+            if (collision.gameObject.name.Contains("Coin"))
             {
                 //코인 획득
-                _gameMgr.AddCoin(1);
+                if (collision.gameObject.name == "Coin_1000")
+                    _gameMgr.AddCoin(1000);
+                else
+                    _gameMgr.AddCoin(1);
+
                 Destroy(collision.gameObject);
             }
         }

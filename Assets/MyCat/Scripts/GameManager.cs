@@ -8,6 +8,9 @@ namespace MyCat
 {
     public class GameManager : MonoBehaviour
     {
+        const string KEY_RES_COIN = "Res_CoinCount";
+        const string KEY_RES_HEART = "Res_HeartCount";
+
         public GameObject _coin;
         public GameObject _heart;
 
@@ -16,6 +19,7 @@ namespace MyCat
         public Text _nowTimeText;
         public Text _coinTxt;
         public Text _heartTxt;
+        public ShopUI _shopUI;
 
         public int _coincount;
         public int _heartcount;
@@ -33,16 +37,39 @@ namespace MyCat
 
             _heartTxt = _canvasObj.transform.Find("Heart interface").Find("heart_Txt").GetComponent<Text>();
             _coinTxt = _canvasObj.transform.Find("Coin interface").Find("coin_Txt").GetComponent<Text>();
+
+            //저장된 값 로드
+            if (PlayerPrefs.HasKey(KEY_RES_COIN))
+            {
+                _coincount = PlayerPrefs.GetInt(KEY_RES_COIN);
+                _coinTxt.text = _coincount.ToString("D4");
+            }
+            
+            if (PlayerPrefs.HasKey(KEY_RES_HEART))
+            {
+                _heartcount = PlayerPrefs.GetInt(KEY_RES_HEART);
+                _heartTxt.text = _heartcount.ToString("D4");
+            }
+
+            _shopUI = _canvasObj.transform.Find("ShopUI").GetComponent<ShopUI>();
+            _shopUI.gameObject.SetActive(false);
         }
 
         public void AddCoin(int count)
         {
             _coincount += count;
+
+            //저장할 값 세이브
+            PlayerPrefs.SetInt(KEY_RES_COIN, _coincount);
+
             _coinTxt.text = _coincount.ToString("D4");
         }   
         public void AddHeart(int count)
         {
             _heartcount += count;
+
+            PlayerPrefs.SetInt(KEY_RES_HEART, _heartcount);
+
             _heartTxt.text = _heartcount.ToString("D4");
         }
 
@@ -63,6 +90,15 @@ namespace MyCat
         public void OnFinish_Eat()
         {
             _dish.SetActive(false);
+        }
+        public void OnClick_Shop()
+        {
+            _shopUI.gameObject.SetActive(true);
+        }
+
+        public void OnClose()
+        {
+            gameObject.SetActive(false);
         }
 
         public void Dropcoin()
